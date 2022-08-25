@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "667085431035",
+    "project_id": "photo-like-92bf0",
+    "storage_bucket": "photo-like-92bf0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667085431035:android:5c7e438aec31770f23d05e",
+        "android_client_info": {
+          "package_name": "com.example.photo_like_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667085431035-gkga0ckrtrdd3piajeabbq7c5ca6a7rl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwhQ-wl66kg73UzUfZzLt2PXYv77Kb2kc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667085431035-gkga0ckrtrdd3piajeabbq7c5ca6a7rl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "667085431035-d8n3maj7fbprmj3qhsjsti3h0um0cpee.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.photoLikeApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
