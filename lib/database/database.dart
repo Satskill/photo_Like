@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/material.dart';
@@ -164,41 +165,6 @@ class Data {
     }
   }
 
-  Future<List<Map>> storyList(List<String> ref) async {
-    List<Map> files = await [];
-
-    await Future.forEach(ref, (value) async {
-      firebase_storage.ListResult results =
-          await storage.ref(value.toString()).listAll();
-      final List<firebase_storage.Reference> allimages = results.items;
-
-      await Future.forEach<firebase_storage.Reference>(allimages,
-          (element) async {
-        final String fileurl = await element.getDownloadURL();
-        final firebase_storage.FullMetadata filemeta =
-            await element.getMetadata();
-        /*if((filemeta.customMetadata!['date'] as DateTime - DateTime.now() ) <= DateTime(0,0,1,0,0,0,0,0)){
-
-            }*/
-        var sonuc = DateTime.now()
-            .difference(filemeta.customMetadata!['date'] as DateTime);
-        if (sonuc == 1) {
-          files.add({
-            'url': fileurl,
-            'path': element.fullPath,
-            'name': element.name,
-            'uploader': filemeta.customMetadata!['uploader']
-          });
-        }
-      });
-      files.forEach((value) {
-        //print(value.toString());
-      });
-    });
-
-    return files;
-  }
-
   Future<List<Map>> imageList(List<String> ref) async {
     List<Map> files = await [];
 
@@ -216,24 +182,26 @@ class Data {
           'url': fileurl,
           'path': element.fullPath,
           'name': element.name,
-          'uploader': filemeta.customMetadata!['uploader']
+          'uploader': filemeta.customMetadata!['uploader'],
+          'time': filemeta.customMetadata!['date']
         });
       });
       files.forEach((value) {
         //print(value.toString());
       });
     });
-
+    files.sort(
+      (a, b) {
+        return (DateTime.parse(b['time'])).compareTo(DateTime.parse(a['time']));
+      },
+    );
     return files;
   }
 
   Future ProfilePicShow(String ref) async {
-    print('data tarafı profile pic $ref');
     try {
       return await storage.ref(ref).getDownloadURL();
     } catch (e) {
-      print('data tarafı profile pic $ref');
-
       print(e);
     }
   }
@@ -407,10 +375,7 @@ class Data {
       }
       if (element.id == 'Comments') {
         for (var kisi in element.data().entries) {
-          print('ifiçi kisi bilgisi');
-          print(kisi.toString());
           likecomment['Comment']++;
-          print(kisi.key.toString() + ' boşluk ' + kisi.value.toString());
           /*likecomment['UsersComment'] = {
             kisi.key: kisi.value,
           };*/
@@ -418,8 +383,6 @@ class Data {
         }
       }
     }
-    print('likecomment kısmı');
-    print(likecomment.toString());
     return likecomment;
   }
 
@@ -443,12 +406,101 @@ class Data {
     }
   }
 
-  Future sohbetler() async {
-    return null;
+  Future<List<Map>> storyList(List<String> ref) async {
+    List<Map> files = await [];
+
+    await Future.forEach(ref, (value) async {
+      firebase_storage.ListResult results =
+          await storage.ref(value.toString()).listAll();
+      final List<firebase_storage.Reference> allimages = results.items;
+
+      await Future.forEach<firebase_storage.Reference>(allimages,
+          (element) async {
+        final String fileurl = await element.getDownloadURL();
+        final firebase_storage.FullMetadata filemeta =
+            await element.getMetadata();
+        /*if((filemeta.customMetadata!['date'] as DateTime - DateTime.now() ) <= DateTime(0,0,1,0,0,0,0,0)){
+
+            }*/
+        var sonuc = DateTime.now()
+            .difference(filemeta.customMetadata!['date'] as DateTime);
+        if (sonuc == 1) {
+          files.add({
+            'url': fileurl,
+            'path': element.fullPath,
+            'name': element.name,
+            'uploader': filemeta.customMetadata!['uploader']
+          });
+        }
+      });
+      files.forEach((value) {
+        //print(value.toString());
+      });
+    });
+
+    return files;
   }
 
-  Future sohbetgoruntule() async {
-    return null;
+  Future sohbetler() async {
+    List<Map> files = [];
+    final user = auth.currentUser!.email;
+
+    final sohbetkisiler = await firestore.collection('Chats').get();
+
+    for (var element in sohbetkisiler.docs) {
+      if (element.id.contains(user.toString())) {
+        print(element.data());
+        print(element.id.substring(user!.length) == user
+            ? element.id.substring(user.length)
+            : element.id.substring(0, (element.id.length - user.length)));
+
+        print('*/*/*/*/*/*/*/*/*/*/ $sohbetler');
+        files.add({
+          'ID': element.id,
+          'User': element.id.substring(user.length) == user
+              ? element.id.substring(user.length)
+              : element.id.substring(0, (element.id.length - user.length)),
+          'Info': element.data(),
+          'Image': await ProfilePicShow(
+              'Users/ProfilePics/${element.id.substring(user.length) == user ? element.id.substring(user.length) : element.id.substring(0, (element.id.length - user.length))}')
+        });
+      }
+      print(element.id);
+    }
+
+    print('sohbetlerdeyim');
+    sohbetkisiler.docs.forEach((element) {
+      print(element.data().entries);
+    });
+
+    return files;
+  }
+
+  Stream sohbetgoruntule(String chatuser) {
+    //DatabaseReference ref = FirebaseDatabase.instance.ref('Chats/$chatuser');
+
+    var streamdoc = firestore.doc('Chats/$chatuser').snapshots();
+
+    streamsub = streamdoc.listen((event) {
+      print(event.data());
+    });
+
+    late final StreamController controller;
+
+    controller = StreamController(
+      onListen: () async {
+        DatabaseReference ref =
+            await FirebaseDatabase.instance.ref('Chats/$chatuser');
+        print(ref.toString());
+        controller.add(ref);
+      },
+    );
+
+    print(controller);
+    print(controller.stream.toString());
+    print('database sohbetgoruntule');
+
+    return controller.stream;
   }
 
   static const _abc =

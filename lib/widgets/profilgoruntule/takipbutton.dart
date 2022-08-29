@@ -111,7 +111,6 @@ class _TakipState extends State<Takip> {
         child: ElevatedButton(
           onPressed: () {
             Map bilgiler = {'tur': '$tur', 'bilgiler': kisiler};
-            print(bilgiler);
             if (tur == 'Following') {
               Navigator.pushNamed(context, '/kisiler', arguments: bilgiler);
             } else if (tur == 'Followers') {

@@ -40,24 +40,32 @@ class _AnaSayfaState extends State<AnaSayfa> {
                   return CustomScrollView(
                     slivers: [
                       SliverList(
-                          delegate:
-                              SliverChildBuilderDelegate((context, index) {
-                        return Column(
-                          children: [
-                            /*hikaye(
-                              followingphotos: bilgi,
-                              index: index,
-                              auth: auth.currentUser!.email,
-                            ),*/
-                            Ana(
-                                snapshot: snapshots,
-                                index: index,
-                                kullanici: snapshots.data![index]['uploader']
-                                    .toString(),
-                                auth: auth.currentUser!.email),
-                          ],
-                        );
-                      }, childCount: snapshots.data!.length)),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return Column(
+                            children: [
+                              hikaye(
+                                followingphotos: bilgi,
+                                index: index < bilgi.length ? index : -1,
+                                auth: auth.currentUser!.email,
+                              ),
+                            ],
+                          );
+                        }, childCount: bilgi.length),
+                      ),
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          return Column(
+                            children: [
+                              Ana(
+                                  snapshot: snapshots,
+                                  index: index,
+                                  kullanici: snapshots.data![index]['uploader']
+                                      .toString(),
+                                  auth: auth.currentUser!.email),
+                            ],
+                          );
+                        }, childCount: snapshots.data!.length),
+                      ),
                     ],
                   );
                 }

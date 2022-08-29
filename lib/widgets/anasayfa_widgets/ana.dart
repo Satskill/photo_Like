@@ -28,9 +28,6 @@ class _AnaState extends State<Ana> {
   Widget followingfotolar(var snapshot, var index, String kullanici) {
     try {
       final images = snapshot.data![index];
-      print('giriş kısmı');
-      print(images.toString());
-      print(snapshot.data!.toString());
 
       final List<Map> sayi = snapshot.data!;
 
@@ -54,8 +51,6 @@ class _AnaState extends State<Ana> {
                 if (bilgianlik.contains(widget.auth)) {
                   begenivarmi = true;
                 }
-                print('ana snapshotim');
-                print(snapshotim.data.toString());
                 bilgiler['images'] = images;
                 bilgiler['kullanici'] = kullanici;
                 bilgiler['auth'] = widget.auth;

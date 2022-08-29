@@ -30,11 +30,6 @@ class _yorumlarState extends State<yorumlar> {
             List<TextEditingController> yorumyap = List.generate(
                 mapim.keys.length + 1, (i) => TextEditingController());
 
-            print('***************************' +
-                mapim.keys.toString() +
-                'kadar var buralarda' +
-                mapim.values.toString());
-
             for (int i = 1; i <= mapim.keys.length; i++) {
               Map altmapim = Map.from(mapim['Yorum$i']);
               for (int j = 1; j <= altmapim.keys.length; j++) {
@@ -191,11 +186,6 @@ class _yorumlarState extends State<yorumlar> {
       if (i == 1) {
         continue;
       }
-      print('****************//////////////////////');
-      print(mapim.keys.toString());
-      print(mapim.toString());
-      print(mapim['Yorum$i']['Yorumcu'].toString());
-      print(mapim['Yorum$i']['Yorum'].toString());
       textler.add(
           Text('${mapim['Yorum$i']['Yorumcu']} ${mapim['Yorum$i']['Yorum']}'));
       //}

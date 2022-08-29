@@ -28,8 +28,6 @@ class _profilState extends State<profil> {
   @override
   Widget build(BuildContext context) {
     final user = widget.user;
-    print('geldi');
-    print(user);
     List<String> kisi = ['Users/Pictures/$user'];
     return Scaffold(
       appBar: AppBar(),
@@ -40,20 +38,10 @@ class _profilState extends State<profil> {
               snapshot.hasData) {
             Map bilgi = snapshot.data!;
             if (bilgi['Followers'].contains(auth.currentUser!.email)) {
-              print('ifte true yaptım');
               widget.takipetme = true;
             } else {
-              print('ifte false yaptım');
               widget.takipetme = false;
             }
-            print(bilgi.keys);
-            print(bilgi.values);
-            print(bilgi.entries);
-            print(bilgi['Following']);
-            print(widget.takipetme);
-            print(bilgi['Following'].contains(auth.currentUser!.email));
-            print('***************************************************');
-            print(bilgi.toString());
             return FutureBuilder(
               future: Data().imageList(kisi),
               builder: (context, AsyncSnapshot<List<Map>> snapshots) {
@@ -220,7 +208,6 @@ class _profilState extends State<profil> {
         child: ElevatedButton(
           onPressed: () {
             Map bilgiler = {'tur': '$tur', 'bilgiler': kisiler};
-            print(bilgiler);
             if (tur == 'Following') {
               Navigator.pushNamed(context, '/kisiler', arguments: bilgiler);
             } else if (tur == 'Followers') {

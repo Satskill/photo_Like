@@ -35,9 +35,6 @@ class _ekleState extends State<ekle> {
           widget.fileimage = await Data().showImage(context);
           if (widget.fileimage != null) {
             try {
-              print(
-                  '*******************************************************************************************');
-              print(widget.fileimage['file'].path.toString());
               widget.image = FileImage(File(widget.fileimage['file'].path));
               Resimekle.fileimage = widget.image;
               Resimekle.file = widget.fileimage['file'].path;

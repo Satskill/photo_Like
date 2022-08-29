@@ -34,10 +34,6 @@ class _profilekleState extends State<profilekle> {
           Data().ProfilePicShow('Users/ProfilePics/${widget.bilgi['User']}'),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          print(widget.bilgi.toString());
-          print('bakalım neler var *********************************' +
-              snapshot.data.toString() +
-              widget.bilgi['User'].toString());
           return ElevatedButton(
             onPressed: () async {
               if (widget.type != 'baska') {

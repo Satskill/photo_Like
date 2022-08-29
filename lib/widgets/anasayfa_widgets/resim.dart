@@ -50,17 +50,12 @@ class _resimState extends State<resim> {
   Widget doubler(Map images, String kullanici) {
     final ValueChanged begeni;
     begendimi = widget.bilgiler['begenivarmi'] ?? false;
-    print('************************************************************');
-    print(begendimi);
-    print(widget.bilgiler);
-    print(widget.bilgiler['UsersComment']);
     Alt? alt;
     return Container(
       height: 360,
       child: GestureDetector(
         onDoubleTap: () async {
           await Data().Like(kullanici, images['name'], widget.auth);
-          print(begendimi);
           if (begendimi == true) {
             widget.bilgiler['begenivarmi'] = false;
             widget.begeni--;
@@ -68,7 +63,6 @@ class _resimState extends State<resim> {
             widget.bilgiler['begenivarmi'] = true;
             widget.begeni++;
           }
-          print(begendimi);
           update(begendimi);
         },
         child: Image.network(
@@ -97,7 +91,6 @@ class _resimState extends State<resim> {
                     widget.bilgiler['begenivarmi'] = true;
                     widget.begeni++;
                   }
-                  print(begendimi);
                   update(begendimi);
                 },
                 icon: Icon(
@@ -192,8 +185,6 @@ class _resimState extends State<resim> {
                       if (snapshot.connectionState == ConnectionState.done &&
                           snapshot.hasData) {
                         final bilgi = snapshot.data['Info'];
-                        print(
-                            'Rasim içi **********//////////////*************** ${bilgi}');
                         return Row(children: [
                           Text('    ${bilgi['Isim']} ${bilgi['Soyisim']}  ',
                               style: TextStyle(

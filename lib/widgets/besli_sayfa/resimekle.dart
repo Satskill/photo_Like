@@ -52,8 +52,6 @@ class _ResimekleState extends State<Resimekle> {
                       onPressed: () async {
                         //deger();
                         filex = Resimekle.file;
-                        print(filex.toString());
-                        print(Resimekle.file.toString());
                         await Data()
                             .uploadImage(filex!, 'Pictures', yorum: yorum.text);
                         setState(() {});

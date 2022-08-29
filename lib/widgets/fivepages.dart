@@ -43,10 +43,10 @@ class _FivesState extends State<Fives> {
             onPressed: () {
               Navigator.pushNamed(context, '/sohbetler');
             },
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.chat),
             label: Text(''),
             style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(0, 114, 104, 73)),
+                primary: Color.fromARGB(255, 41, 52, 98)),
           )
         ],
       ),

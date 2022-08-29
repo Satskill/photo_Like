@@ -54,10 +54,11 @@ class Routes {
         print('route bilgisi');
         print(bilgiler.toString());
         return _routes(goruntuleme(resimbilgisi: bilgiler), settings);
-      case 'sohbetler':
+      case '/sohbetler':
         return _routes(sohbetler(), settings);
-      case 'sohbetgoruntule':
-        return _routes(sohbetgoruntule(), settings);
+      case '/sohbetgoruntule':
+        final bilgi = settings.arguments;
+        return _routes(sohbetgoruntule(sohbetuser: bilgi), settings);
     }
   }
 }

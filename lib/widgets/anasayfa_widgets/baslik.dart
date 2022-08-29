@@ -32,8 +32,6 @@ class _baslikState extends State<baslik> {
                 : snapshot.data!.length,
             itemBuilder: (context, index) {
               final resim = snapshot.data![index];
-              print('başlık bilgi');
-              print(resim.toString());
 
               return ElevatedButton.icon(
                 onPressed: () {

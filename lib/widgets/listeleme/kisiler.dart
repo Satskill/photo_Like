@@ -35,7 +35,6 @@ class _kisilerState extends State<kisiler> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final resim = snapshot.data![index];
-                print(resim.toString());
 
                 return GestureDetector(
                   onTap: () {
