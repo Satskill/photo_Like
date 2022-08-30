@@ -188,6 +188,7 @@ class _resimState extends State<resim> {
                         return Row(children: [
                           Text('    ${bilgi['Isim']} ${bilgi['Soyisim']}  ',
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   decorationStyle: TextDecorationStyle.solid)),
                           Text('${yazi['Yorum1']['Yorum1']['Yorum']}'),

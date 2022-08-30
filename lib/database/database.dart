@@ -462,8 +462,12 @@ class Data {
               : element.id.substring(0, (element.id.length - user.length)),
           'Info': element.data(),
           'Image': await ProfilePicShow(
-              'Users/ProfilePics/${element.id.substring(user.length) == user ? element.id.substring(user.length) : element.id.substring(0, (element.id.length - user.length))}')
+              'Users/ProfilePics/${element.id.substring(user.length) == user ? element.id.substring(0, (element.id.length - user.length)) : element.id.substring(user.length)}')
         });
+        print(element.id.substring(user.length) == user
+            ? element.id.substring(0, (element.id.length - user.length))
+            : element.id.substring(user.length));
+        print(files);
       }
       print(element.id);
     }
@@ -486,18 +490,19 @@ class Data {
     });
 
     late final StreamController controller;
-
+    print('controller dışı');
     controller = StreamController(
       onListen: () async {
         DatabaseReference ref =
             await FirebaseDatabase.instance.ref('Chats/$chatuser');
         print(ref.toString());
+        print('controller içi');
         controller.add(ref);
       },
     );
 
     print(controller);
-    print(controller.stream.toString());
+    print(controller.stream..toString());
     print('database sohbetgoruntule');
 
     return controller.stream;

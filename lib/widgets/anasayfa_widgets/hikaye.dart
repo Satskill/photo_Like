@@ -28,10 +28,16 @@ class _hikayeState extends State<hikaye> {
             ? Row(
                 children: [
                   futureim(widget.auth),
-                  futureim(widget.followingphotos[0])
                 ],
               )
-            : futureim(widget.followingphotos[widget.index])
+            : widget.index == 0
+                ? Row(
+                    children: [
+                      futureim(widget.auth),
+                      futureim(widget.followingphotos[0])
+                    ],
+                  )
+                : futureim(widget.followingphotos[widget.index])
       ],
     );
   }
