@@ -485,8 +485,11 @@ class Data {
 
     var streamdoc = firestore.doc('Chats/$chatuser').snapshots();
 
-    streamsub = streamdoc.listen((event) {
-      print(event.data());
+    streamdoc.listen((event) {
+      event.docChanges.forEach((element) {
+      print(element.doc.data().toString());
+
+      })
     });
 
     late final StreamController controller;
