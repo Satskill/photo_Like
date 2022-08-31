@@ -449,30 +449,19 @@ class Data {
 
     for (var element in sohbetkisiler.docs) {
       if (element.id.contains(user.toString())) {
-        print(element.data());
-        print(element.id.substring(user!.length) == user
+        final karsikisi = element.id.startsWith(user!)
             ? element.id.substring(user.length)
-            : element.id.substring(0, (element.id.length - user.length)));
+            : element.id.substring(0, element.id.length - user.length);
 
-        print('*/*/*/*/*/*/*/*/*/*/ $sohbetler');
         files.add({
           'ID': element.id,
-          'User': element.id.substring(user.length) == user
-              ? element.id.substring(user.length)
-              : element.id.substring(0, (element.id.length - user.length)),
+          'User': karsikisi,
           'Info': element.data(),
-          'Image': await ProfilePicShow(
-              'Users/ProfilePics/${element.id.substring(user.length) == user ? element.id.substring(0, (element.id.length - user.length)) : element.id.substring(user.length)}')
+          'Image': await ProfilePicShow('Users/ProfilePics/${karsikisi}')
         });
-        print(element.id.substring(user.length) == user
-            ? element.id.substring(0, (element.id.length - user.length))
-            : element.id.substring(user.length));
-        print(files);
       }
-      print(element.id);
     }
 
-    print('sohbetlerdeyim');
     sohbetkisiler.docs.forEach((element) {
       print(element.data().entries);
     });
@@ -482,33 +471,50 @@ class Data {
 
   Stream sohbetgoruntule(String chatuser) {
     //DatabaseReference ref = FirebaseDatabase.instance.ref('Chats/$chatuser');
+    late final StreamController<Map> controller;
 
-    var streamdoc = firestore.doc('Chats/$chatuser').snapshots();
+    var streamdoc = firestore.collection('Chats').snapshots();
 
+    print('burdayım');
     streamdoc.listen((event) {
       event.docChanges.forEach((element) {
-      print(element.doc.data().toString());
-
-      })
+        if (element.doc.id == chatuser) {
+          print(element.doc.data().toString());
+        }
+      });
     });
 
-    late final StreamController controller;
     print('controller dışı');
     controller = StreamController(
-      onListen: () async {
-        DatabaseReference ref =
-            await FirebaseDatabase.instance.ref('Chats/$chatuser');
-        print(ref.toString());
-        print('controller içi');
-        controller.add(ref);
+      onListen: () {
+        //controller.add('deneme');
+        print('içerideyim');
+        streamdoc.listen((event) {
+          event.docChanges.forEach((element) {
+            if (element.doc.id == chatuser) {
+              print(element.doc.data().toString());
+              controller.add(element.doc.data()!);
+            }
+          });
+        });
       },
     );
 
-    print(controller);
-    print(controller.stream..toString());
-    print('database sohbetgoruntule');
-
     return controller.stream;
+  }
+
+  Future sohbetekle(String chatuser, String mesaj) async {
+    final sohbetler = await firestore.collection('Chats').doc(chatuser).get();
+
+    int yeniohbetsayisi = sohbetler.data()!.length + 1;
+
+    firestore.collection('Chats').doc(chatuser).set({
+      '$yeniohbetsayisi': {
+        'Sender': auth.currentUser!.email,
+        'Sohbet': mesaj,
+        'Time': DateTime.now()
+      }
+    }, SetOptions(merge: true));
   }
 
   static const _abc =
