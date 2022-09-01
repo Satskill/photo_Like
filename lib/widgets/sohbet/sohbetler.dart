@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_like_app/widgets/listeleme/kisiler.dart';
 
 import '../../database/database.dart';
 
@@ -10,6 +11,7 @@ class sohbetler extends StatefulWidget {
 }
 
 class _sohbetlerState extends State<sohbetler> {
+  TextEditingController arama = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +24,8 @@ class _sohbetlerState extends State<sohbetler> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
                   child: TextField(
+                      onChanged: (value) {},
+                      controller: arama,
                       decoration: InputDecoration(labelText: 'Sohbet Arama')),
                 ),
               ),

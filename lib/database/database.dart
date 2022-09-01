@@ -463,7 +463,7 @@ class Data {
     }
 
     sohbetkisiler.docs.forEach((element) {
-      print(element.data().entries);
+      //print(element.data().entries);
     });
 
     return files;
@@ -515,6 +515,108 @@ class Data {
         'Time': DateTime.now()
       }
     }, SetOptions(merge: true));
+  }
+
+  void sohbetyoksaekle(String kisi, BuildContext context) async {
+    final List<Map> bilgi = await sohbetler();
+    bool varmi = false;
+    String sohbet = '';
+    print(kisi);
+    bilgi.forEach((element) {
+      String kisisohbet = element['ID'];
+      if (kisisohbet.contains(kisi) &&
+          kisisohbet.contains(auth.currentUser!.email.toString())) {
+        varmi = true;
+        sohbet = kisisohbet;
+      }
+      print('************************');
+      print(element.keys);
+      print(element['ID']);
+    });
+    if (varmi == false) {
+      Navigator.pushNamed(context, '/sohbetgoruntule',
+          arguments: '${auth.currentUser!.email.toString() + kisi}');
+    } else {
+      Navigator.pushNamed(context, '/sohbetgoruntule', arguments: sohbet);
+    }
+    print(varmi);
+  }
+
+  Future hikayetakibi(String kisi, Map images) async {
+    final hikaye = await firestore.collection('Story').doc(kisi).get();
+
+    if (hikaye.data()!.isNotEmpty) {
+      hikaye.metadata.toString();
+    }
+  }
+
+  Future hikayeekle(File filepath, String kisi) async {
+    File file = File(filepath.path);
+    String name = getRndString(32);
+
+    try {
+      var metam = {'uploader': '$kisi', 'date': '${DateTime.now()}'};
+      await storage.ref('Story/$kisi/$name').putFile(
+          file, firebase_storage.SettableMetadata(customMetadata: metam));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future hikayeler(BuildContext context, int index) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Scaffold(
+          body: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.black26,
+            child: index == 0
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            dynamic image = await showImage(context);
+                            if (image != null) {
+                              File imageim = File(fileimage!.path);
+                              await hikayeekle(
+                                  imageim, auth.currentUser!.email.toString());
+                            }
+                          },
+                          child: Text('Kişi'),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize:
+                                  Size(MediaQuery.of(context).size.width, 60),
+                              backgroundColor: Colors.black.withOpacity(0)),
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.broken_image_outlined,
+                                size: 100,
+                              ),
+                              Text('Hikayeniz bulunmuyor'),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Çık'))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ),
+        );
+      },
+    );
   }
 
   static const _abc =

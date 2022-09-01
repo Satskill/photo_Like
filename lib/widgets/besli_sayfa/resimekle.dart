@@ -72,19 +72,6 @@ class _ResimekleState extends State<Resimekle> {
                 controller: yorum,
               ),
             ),
-            /* ElevatedButton.icon(
-                icon: Icon(Icons.arrow_upward),
-                style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 36, 74, 88),
-                ),
-                onPressed: () async {
-                  deger();
-                  print(filex.toString());
-                  await Data()
-                      .uploadImage(filex!, 'Pictures', yorum: yorum.text);
-                  setState(() {});
-                },
-                label: Text('Yükle'))*/
           ],
         ),
       ),

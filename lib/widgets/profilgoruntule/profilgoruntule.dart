@@ -30,7 +30,19 @@ class _profilState extends State<profil> {
     final user = widget.user;
     List<String> kisi = ['Users/Pictures/$user'];
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          ElevatedButton.icon(
+            onPressed: () async {
+              Data().sohbetyoksaekle(user, context);
+            },
+            icon: Icon(Icons.add_comment_rounded),
+            label: Text(''),
+            style: ElevatedButton.styleFrom(
+                primary: Color.fromARGB(255, 41, 52, 98)),
+          )
+        ],
+      ),
       body: FutureBuilder(
         future: Data().userallinfo(user),
         builder: (context, AsyncSnapshot<Map> snapshot) {

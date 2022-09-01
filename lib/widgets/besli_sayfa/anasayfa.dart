@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_like_app/widgets/anasayfa_widgets/hikaye.dart';
-import 'package:photo_like_app/widgets/besli_sayfa/anasayfawidget.dart';
 
 import '../../database/database.dart';
 import '../anasayfa_widgets/ana.dart';
@@ -28,6 +27,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
             snapshot.hasData) {
           final bilgiler = snapshot.data!;
           var bilgi = bilgiler['Following'] as List;
+          bilgi.insert(0, user);
           bilgi.forEach((element) {
             following.add('Users/Pictures/$element');
           });
@@ -41,16 +41,12 @@ class _AnaSayfaState extends State<AnaSayfa> {
                     slivers: [
                       SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
-                          return Column(
-                            children: [
-                              hikaye(
-                                followingphotos: bilgi,
-                                index: index < bilgi.length ? index : -1,
-                                auth: auth.currentUser!.email,
-                              ),
-                            ],
+                          return hikaye(
+                            index: index,
+                            auth: user,
+                            bilgi: bilgi,
                           );
-                        }, childCount: bilgi.length),
+                        }, childCount: 1),
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
@@ -61,7 +57,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
                                   index: index,
                                   kullanici: snapshots.data![index]['uploader']
                                       .toString(),
-                                  auth: auth.currentUser!.email),
+                                  auth: user),
                             ],
                           );
                         }, childCount: snapshots.data!.length),

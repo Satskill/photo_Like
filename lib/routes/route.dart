@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_like_app/widgets/anasayfa_widgets/hikayeekrani.dart';
 import 'package:photo_like_app/widgets/fivepages.dart';
 import 'package:photo_like_app/widgets/listeleme/kisiler.dart';
 import 'package:photo_like_app/widgets/profilgoruntule/profilgoruntule.dart';
@@ -59,6 +60,9 @@ class Routes {
       case '/sohbetgoruntule':
         final bilgi = settings.arguments;
         return _routes(sohbetgoruntule(sohbetuser: bilgi), settings);
+      case '/hikayeekrani':
+        final index = settings.arguments;
+        return _routes(hikayeekrani(index: index), settings);
     }
   }
 }

@@ -44,7 +44,7 @@ class _sohbetgoruntuleState extends State<sohbetgoruntule> {
                   );
                 }
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Icon(Icons.comments_disabled),
                 );
               },
             ),
