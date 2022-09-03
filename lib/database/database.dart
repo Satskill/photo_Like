@@ -596,7 +596,7 @@ class Data {
     }
   }
 
-  Future hikayeler(BuildContext context, int index) {
+  Future hikayeler(BuildContext context, int index, String user) {
     return showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -645,7 +645,41 @@ class Data {
                       ],
                     ),
                   )
-                : Container(),
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.pushNamed(context, '/profil',
+                      arguments: user);
+                          },
+                          child: Text('Kişi'),
+                          style: ElevatedButton.styleFrom(
+                              fixedSize:
+                                  Size(MediaQuery.of(context).size.width, 60),
+                              backgroundColor: Colors.black.withOpacity(0)),
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.broken_image_outlined,
+                                size: 100,
+                              ),
+                              Text('Hikayeniz bulunmuyor'),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Çık'))
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
         );
       },
