@@ -74,7 +74,7 @@ class _hikayeState extends State<hikaye> {
                   print('ifteyim');
                 }
                 print(DateTimeRange(start: zaman, end: DateTime.now()));
-                await Data().hikayeler(context, index);
+                await Data().hikayeler(context, index, '');
               },
               child: Column(
                 children: [

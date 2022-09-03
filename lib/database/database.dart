@@ -25,54 +25,58 @@ class Data {
 
   void SignsWithMail(String _mail, String _password, BuildContext _context,
       {String? isim, String? soyisim, String? username}) async {
-        final info = firebase.collection('Users').doc('Usernames').get();
+    final info = await firestore.collection('Users').doc('Usernames').get();
 
-        bool varmi = false;
+    bool varmi = false;
 
-        for(var element in info){
-          if(element.id == username){
-            varmi = true;
-          }
-        }
+    for (var element in info.data()!.keys) {
+      if (element == username) {
+        varmi = true;
+      }
+    }
 
-        if(varmi == false){
-          try {
-      var _user = await auth.signInWithEmailAndPassword(
-          email: _mail, password: _password);
-      Navigator.pushReplacementNamed(_context, '/fives');
-      //Navigator.pushNamed(_context, '/fives');
-    } catch (e) {
+    if (varmi == false) {
       try {
-        var _newuser = await auth.createUserWithEmailAndPassword(
+        var _user = await auth.signInWithEmailAndPassword(
             email: _mail, password: _password);
         Navigator.pushReplacementNamed(_context, '/fives');
         //Navigator.pushNamed(_context, '/fives');
-        firestore.collection('Users').doc('$_mail').set({
-          'Followers': [],
-          'Following': [],
-          'Info': {'Isim': isim, 'Soyisim': soyisim, 'Username': username}
-        });
-        firestore.collection('Users').doc('Usernames').set({
-          '$username': {'Mail': _mail, 'ProfilePic': 'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81'}
-        }, SetOptions(merge: true));
       } catch (e) {
-        AlertDialog _alert = AlertDialog(
-          title: Text('Hata!'),
-          content: Text(e.toString()),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(_context).pop();
-                },
-                child: Text('OK'))
-          ],
-        );
-      }
-        }else{
-          return AlertDialog();
+        try {
+          var _newuser = await auth.createUserWithEmailAndPassword(
+              email: _mail, password: _password);
+          Navigator.pushReplacementNamed(_context, '/fives');
+          //Navigator.pushNamed(_context, '/fives');
+          firestore.collection('Users').doc('$_mail').set({
+            'Followers': [],
+            'Following': [],
+            'Info': {'Isim': isim, 'Soyisim': soyisim, 'Username': username}
+          });
+          firestore.collection('Users').doc('Usernames').set({
+            '$username': {
+              'Mail': _mail,
+              'ProfilePic':
+                  'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81'
+            }
+          }, SetOptions(merge: true));
+        } catch (e) {
+          AlertDialog _alert = AlertDialog(
+            title: Text('Hata!'),
+            content: Text(e.toString()),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(_context).pop();
+                  },
+                  child: Text('OK'))
+            ],
+          );
         }
-
-    
+      }
+    } else {
+      AlertDialog(
+        title: Text('Username mevcut'),
+      );
     }
   }
 
@@ -489,12 +493,14 @@ class Data {
   }
 
   Future sohbetisimara(String isimgirisi) async {
-    final usernames = firebase.collection('Users').doc('Usernames').get;
+    final usernames = await firestore.collection('Users').doc('Usernames').get;
 
     List<Map> infolar = [];
 
-    for(var element in usernames){
-      if(element.id.contains(isimgirisi)){
+    Map gecici = Map.from(usernames as Map);
+
+    for (var element in gecici.values) {
+      if (element.id.contains(isimgirisi)) {
         infolar.add(element);
       }
     }
@@ -623,7 +629,7 @@ class Data {
                           style: ElevatedButton.styleFrom(
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
-                              backgroundColor: Colors.black.withOpacity(0)),
+                              primary: Colors.black.withOpacity(0)),
                         ),
                         Expanded(
                           child: Column(
@@ -652,13 +658,13 @@ class Data {
                         ElevatedButton(
                           onPressed: () async {
                             Navigator.pushNamed(context, '/profil',
-                      arguments: user);
+                                arguments: user);
                           },
                           child: Text('Kişi'),
                           style: ElevatedButton.styleFrom(
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
-                              backgroundColor: Colors.black.withOpacity(0)),
+                              primary: Colors.black.withOpacity(0)),
                         ),
                         Expanded(
                           child: Column(
