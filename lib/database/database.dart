@@ -24,8 +24,19 @@ class Data {
   XFile? xfileimage;
 
   void SignsWithMail(String _mail, String _password, BuildContext _context,
-      {String? isim, String? soyisim}) async {
-    try {
+      {String? isim, String? soyisim, String? username}) async {
+        final info = firebase.collection('Users').doc('Usernames').get();
+
+        bool varmi = false;
+
+        for(var element in info){
+          if(element.id == username){
+            varmi = true;
+          }
+        }
+
+        if(varmi == false){
+          try {
       var _user = await auth.signInWithEmailAndPassword(
           email: _mail, password: _password);
       Navigator.pushReplacementNamed(_context, '/fives');
@@ -39,8 +50,11 @@ class Data {
         firestore.collection('Users').doc('$_mail').set({
           'Followers': [],
           'Following': [],
-          'Info': {'Isim': isim, 'Soyisim': soyisim}
+          'Info': {'Isim': isim, 'Soyisim': soyisim, 'Username': username}
         });
+        firestore.collection('Users').doc('Usernames').set({
+          '$username': {'Mail': _mail, 'ProfilePic': 'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81'}
+        }, SetOptions(merge: true));
       } catch (e) {
         AlertDialog _alert = AlertDialog(
           title: Text('Hata!'),
@@ -54,6 +68,11 @@ class Data {
           ],
         );
       }
+        }else{
+          return AlertDialog();
+        }
+
+    
     }
   }
 
@@ -467,6 +486,20 @@ class Data {
     });
 
     return files;
+  }
+
+  Future sohbetisimara(String isimgirisi) async {
+    final usernames = firebase.collection('Users').doc('Usernames').get;
+
+    List<Map> infolar = [];
+
+    for(var element in usernames){
+      if(element.id.contains(isimgirisi)){
+        infolar.add(element);
+      }
+    }
+
+    return infolar;
   }
 
   Stream sohbetgoruntule(String chatuser) {

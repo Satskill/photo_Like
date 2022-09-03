@@ -57,6 +57,7 @@ class _SignsMailState extends State<SignsMail> {
     TextEditingController _passcont = new TextEditingController();
     TextEditingController _isimcont = new TextEditingController();
     TextEditingController _soyisimcont = new TextEditingController();
+    TextEditingController _username = new TextEditingController();
     List<String> following = [];
     if (index == 0) {
       return Container(
@@ -90,11 +91,12 @@ class _SignsMailState extends State<SignsMail> {
               textim(_passcont, 'Şifre'),
               textim(_isimcont, 'İsim'),
               textim(_soyisimcont, 'Soyisim'),
+              textim(_username, 'Username'),
               ElevatedButton(
                   onPressed: () {
                     Data().SignsWithMail(
                         _mailcont.text, _passcont.text, context,
-                        isim: _isimcont.text, soyisim: _soyisimcont.text);
+                        isim: _isimcont.text, soyisim: _soyisimcont.text, username: _username.text);
                   },
                   child: Center(
                     child: Text('Kayıt Ol'),
