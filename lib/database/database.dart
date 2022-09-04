@@ -22,6 +22,7 @@ class Data {
   StreamSubscription? streamsub;
   File? fileimage;
   XFile? xfileimage;
+  String usernamedata = '';
 
   void SignsWithMail(String _mail, String _password, BuildContext _context,
       {String? isim, String? soyisim, String? username}) async {
@@ -39,8 +40,13 @@ class Data {
       try {
         var _user = await auth.signInWithEmailAndPassword(
             email: _mail, password: _password);
+            final bilgim = firestore.collection('Users').doc('Usernames').get;
+            for(var element in bilgim.data()!.values){
+              if(element.contains(_mail)){
+                usernamedata = element.key;
+              }
+            }
         Navigator.pushReplacementNamed(_context, '/fives');
-        //Navigator.pushNamed(_context, '/fives');
       } catch (e) {
         try {
           var _newuser = await auth.createUserWithEmailAndPassword(
@@ -59,6 +65,7 @@ class Data {
                   'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81'
             }
           }, SetOptions(merge: true));
+          usernamedata = username;
         } catch (e) {
           AlertDialog _alert = AlertDialog(
             title: Text('Hata!'),
@@ -180,6 +187,16 @@ class Data {
             .set({
           'Yorum1': {
             'Yorum1': {'Yorum': yorum, 'Date': DateTime.now(), 'Yorumcu': email}
+          }
+        });
+      }else if(type == 'ProfilePics'){
+        final profilfotom = await storage.ref('Users/ProfilePics/$email').getDownloadURL();
+        firestore
+            .collection('Users')
+            .doc('Usernames')
+            .set({
+          '$usernamedata': {
+            'Mail': email, 'ProfilePic': profilfotom
           }
         });
       }
