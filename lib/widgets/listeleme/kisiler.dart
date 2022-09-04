@@ -31,6 +31,27 @@ class _kisilerState extends State<kisiler> {
         builder: (context, AsyncSnapshot<List> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
+                if(widget.tur != 'Sohbet'){
+                  return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final resim = snapshot.data![index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/profil',
+                        arguments: resim['user']);
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: Image.network(resim['url']),
+                      title: Text(resim['name']),
+                    ),
+                  ),
+                );
+              },
+            );
+                }
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {

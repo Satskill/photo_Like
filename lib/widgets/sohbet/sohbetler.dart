@@ -31,7 +31,9 @@ class _sohbetlerState extends State<sohbetler> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 6, 12, 0),
-                child: ElevatedButton(onPressed: () {}, child: Icon(Icons.add)),
+                child: ElevatedButton(onPressed: () {
+                  //anasayfadan bilgiler gelicek
+                }, child: Icon(Icons.add)),
               )
             ],
           ),
