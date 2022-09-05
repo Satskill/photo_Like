@@ -22,7 +22,7 @@ class Data {
   StreamSubscription? streamsub;
   File? fileimage;
   XFile? xfileimage;
-  String usernamedata = '';
+  String? usernamedata;
 
   void SignsWithMail(String _mail, String _password, BuildContext _context,
       {String? isim, String? soyisim, String? username}) async {
@@ -30,22 +30,29 @@ class Data {
 
     bool varmi = false;
 
+    print(info.data()!.entries);
+
     for (var element in info.data()!.keys) {
       if (element == username) {
+        print(element);
         varmi = true;
       }
     }
 
     if (varmi == false) {
       try {
+        print('ife girdim');
         var _user = await auth.signInWithEmailAndPassword(
             email: _mail, password: _password);
-            final bilgim = firestore.collection('Users').doc('Usernames').get;
-            for(var element in bilgim.data()!.values){
-              if(element.contains(_mail)){
-                usernamedata = element.key;
-              }
-            }
+        final bilgim =
+            await firestore.collection('Users').doc('Usernames').get();
+        for (var element in bilgim.data()!.entries) {
+          print(element.value);
+          if (element.value['Mail'] == _mail) {
+            print(element.key);
+            usernamedata = element.key;
+          }
+        }
         Navigator.pushReplacementNamed(_context, '/fives');
       } catch (e) {
         try {
@@ -164,6 +171,8 @@ class Data {
 
     if (type == 'ProfilePics') {
       refpath = 'Users/$type/$email';
+    } else if (type == 'Story') {
+      refpath = '$type/$email/$name';
     } else {
       refpath = 'Users/$type/$email/$name';
     }
@@ -189,19 +198,21 @@ class Data {
             'Yorum1': {'Yorum': yorum, 'Date': DateTime.now(), 'Yorumcu': email}
           }
         });
-      }else if(type == 'ProfilePics'){
-        final profilfotom = await storage.ref('Users/ProfilePics/$email').getDownloadURL();
-        firestore
-            .collection('Users')
-            .doc('Usernames')
-            .set({
-          '$usernamedata': {
-            'Mail': email, 'ProfilePic': profilfotom
-          }
+      } else if (type == 'ProfilePics') {
+        final profilfotom =
+            await storage.ref('Users/ProfilePics/$email').getDownloadURL();
+        firestore.collection('Users').doc('Usernames').set({
+          '$usernamedata': {'Mail': email, 'ProfilePic': profilfotom}
         });
       }
+      print(type);
+      print(refpath);
+      print(name);
+      print('yüklendi');
     } on firebase_core.FirebaseException catch (e) {
       print(e);
+    } finally {
+      print('sorunsuz çalıştım');
     }
   }
 
@@ -510,15 +521,15 @@ class Data {
   }
 
   Future sohbetisimara(String isimgirisi) async {
-    final usernames = await firestore.collection('Users').doc('Usernames').get;
+    final usernames =
+        await firestore.collection('Users').doc('Usernames').get();
 
     List<Map> infolar = [];
 
-    Map gecici = Map.from(usernames as Map);
-
-    for (var element in gecici.values) {
-      if (element.id.contains(isimgirisi)) {
-        infolar.add(element);
+    for (var element in usernames.data()!.entries) {
+      if (element.key.contains(isimgirisi)) {
+        Map gecicimap = {element.key: element.value};
+        infolar.add(gecicimap);
       }
     }
 
@@ -619,7 +630,8 @@ class Data {
     }
   }
 
-  Future hikayeler(BuildContext context, int index, String user) {
+  Future hikayeler(BuildContext context, int index, String storybilgiler) {
+    print('hikayedeyim');
     return showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -648,23 +660,44 @@ class Data {
                                   Size(MediaQuery.of(context).size.width, 60),
                               primary: Colors.black.withOpacity(0)),
                         ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.broken_image_outlined,
-                                size: 100,
+                        storybilgiler.isEmpty
+                            ? Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.broken_image_outlined,
+                                      size: 100,
+                                    ),
+                                    Text('Hikayeniz bulunmuyor'),
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          FileImage? image;
+                                          var fileimage =
+                                              await Data().showImage(context);
+                                          if (fileimage != null) {
+                                            try {
+                                              image = FileImage(
+                                                  File(fileimage['file'].path));
+                                              await Data().uploadImage(
+                                                  File(fileimage['file'].path),
+                                                  'Story');
+                                            } catch (e) {
+                                              print(e);
+                                            }
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Text('Ekle'))
+                                  ],
+                                ),
+                              )
+                            : Expanded(
+                                child: Container(
+                                  child: Image.network(storybilgiler,
+                                      fit: BoxFit.fill),
+                                ),
                               ),
-                              Text('Hikayeniz bulunmuyor'),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Çık'))
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   )

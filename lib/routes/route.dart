@@ -8,6 +8,7 @@ import 'package:photo_like_app/widgets/profilgoruntule/profilgoruntule.dart';
 import 'package:photo_like_app/widgets/listeleme/yorumlar.dart';
 import 'package:photo_like_app/widgets/sohbet/sohbetgoruntule.dart';
 
+import '../widgets/listeleme/followsohbet.dart';
 import '../widgets/resimgoruntule.dart';
 import '../widgets/sohbet/sohbetler.dart';
 
@@ -63,6 +64,8 @@ class Routes {
       case '/hikayeekrani':
         final index = settings.arguments;
         return _routes(hikayeekrani(index: index), settings);
+      case '/followsohbet':
+        return _routes(followsohbet(), settings);
     }
   }
 }

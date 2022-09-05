@@ -26,7 +26,17 @@ class _hikayeState extends State<hikaye> {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          return customlistim(widget.bilgi, snapshot.data);
+          print('hikaye kısmı snapshot');
+          print(snapshot.data);
+          print(snapshot.data[widget.index]['time']);
+          if (DateTime.now()
+                  .difference(
+                      DateTime.parse(snapshot.data[widget.index]['time']))
+                  .inHours <
+              24) {
+            return customlistim(widget.bilgi, snapshot.data);
+          }
+          return customlistim(widget.bilgi, []);
         }
         //List gecici = widget.bilgi[0];
         widget.bilgi.removeWhere((element) {
@@ -63,18 +73,18 @@ class _hikayeState extends State<hikaye> {
               snapshot.hasData) {
             return GestureDetector(
               onTap: () async {
-                print(tumbilgi);
-                print(tumbilgi[0]['time']);
-                print(DateTime.parse(tumbilgi[0]['time']));
-                print(DateTime.now());
-                DateTime zaman = DateTime.parse(tumbilgi[0]['time']);
-                print(zaman.year.toString());
-                print(DateTime.now().difference(zaman));
-                if (DateTime.now().difference(zaman).inHours < 24) {
-                  print('ifteyim');
+                try {
+                  final tumbilgifinal;
+                  print('burdayım');
+                  if (tumbilgi.isEmpty) {
+                    tumbilgifinal = '';
+                  } else {
+                    tumbilgifinal = tumbilgi[index]['url'];
+                  }
+                  await Data().hikayeler(context, index, tumbilgifinal);
+                } catch (e) {
+                  print(e);
                 }
-                print(DateTimeRange(start: zaman, end: DateTime.now()));
-                await Data().hikayeler(context, index, '');
               },
               child: Column(
                 children: [
