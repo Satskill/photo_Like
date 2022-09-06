@@ -43,29 +43,68 @@ class _sohbetgoruntuleState extends State<sohbetgoruntule> {
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                          padding: const EdgeInsets.all(4),
                           child: Container(
                             constraints: BoxConstraints(
                               maxWidth: 350,
                             ),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Card(
                                   elevation: 6,
-                                  child: Text(
-                                    bilgiler['Sohbet'],
-                                    style: TextStyle(fontSize: 18),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 8, 8, 2),
+                                    child: Text.rich(
+                                        textAlign:
+                                            bilgiler['Sender'].toString() ==
+                                                    auth.currentUser!.email
+                                                ? TextAlign.right
+                                                : TextAlign.left,
+                                        TextSpan(children: <TextSpan>[
+                                          new TextSpan(
+                                              style: TextStyle(fontSize: 16),
+                                              text: bilgiler['Sohbet']
+                                                      .toString() +
+                                                  '\n'),
+                                          new TextSpan(
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Color.fromARGB(
+                                                      255, 73, 73, 73)),
+                                              text: DateTime.parse(time
+                                                          .toDate()
+                                                          .toString())
+                                                      .hour
+                                                      .toString() +
+                                                  ':' +
+                                                  (DateTime.parse(time.toDate().toString())
+                                                              .minute
+                                                              .toString()
+                                                              .length ==
+                                                          1
+                                                      ? '0' +
+                                                          DateTime.parse(time
+                                                                  .toDate()
+                                                                  .toString())
+                                                              .minute
+                                                              .toString()
+                                                      : DateTime.parse(
+                                                              time.toDate().toString())
+                                                          .minute
+                                                          .toString()))
+                                        ])
+                                        /*'${bilgiler['Sohbet']}\n${DateTime.parse(time.toDate().toString()).hour.toString() + ':' + (DateTime.parse(time.toDate().toString()).minute.toString().length == 1 ? '0' + DateTime.parse(time.toDate().toString()).minute.toString() : DateTime.parse(time.toDate().toString()).minute.toString())}',
+                                      style: TextStyle(fontSize: 18),
+                                      textAlign:
+                                          bilgiler['Sender'].toString() ==
+                                                  auth.currentUser!.email
+                                              ? TextAlign.right
+                                              : TextAlign.left,*/
+                                        ),
                                   ),
                                 ),
-                                Text(DateTime.fromMicrosecondsSinceEpoch(
-                                            time.seconds)
-                                        .hour
-                                        .toString() +
-                                    ' : ' +
-                                    DateTime.fromMicrosecondsSinceEpoch(
-                                            time.seconds)
-                                        .minute
-                                        .toString())
                               ],
                             ),
                           ),
@@ -88,7 +127,12 @@ class _sohbetgoruntuleState extends State<sohbetgoruntule> {
                 suffixIcon: Padding(
                   padding: EdgeInsets.all(2),
                   child: ElevatedButton(
-                    child: Text('Gönder'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, elevation: 0),
+                    child: Text(
+                      'Gönder',
+                      style: TextStyle(color: Colors.black),
+                    ),
                     onPressed: () async {
                       Data().sohbetekle(widget.sohbetuser, sohbetet.text);
                       sohbetet.text = '';

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_like_app/widgets/anasayfa_widgets/hikayeekrani.dart';
+import 'package:photo_like_app/widgets/besli_sayfa/profilim.dart';
 import 'package:photo_like_app/widgets/fivepages.dart';
 import 'package:photo_like_app/widgets/listeleme/kisiler.dart';
 import 'package:photo_like_app/widgets/profilgoruntule/profilgoruntule.dart';
@@ -41,6 +42,8 @@ class Routes {
       case '/profil':
         String user = settings.arguments as String;
         return _routes(profil(user: user), settings);
+      case '/profilim':
+        return _routes(Profilim(), settings);
       case '/kisiler':
         Map bilgiler = settings.arguments as Map;
         List<dynamic> olesine = [];

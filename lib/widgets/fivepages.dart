@@ -84,7 +84,7 @@ class _FivesState extends State<Fives> {
               Icons.comment_outlined,
               color: Color.fromARGB(255, 245, 247, 178),
             ),
-            label: 'Beğeni/Yorum',
+            label: 'Bildirimler',
             backgroundColor: Color.fromARGB(255, 31, 70, 144),
           ),
           BottomNavigationBarItem(

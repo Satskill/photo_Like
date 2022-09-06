@@ -41,6 +41,8 @@ class _AnaSayfaState extends State<AnaSayfa> {
                     slivers: [
                       SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
+                          print('hikaye gidecek bilgi');
+                          print(bilgi);
                           return hikaye(
                             index: index,
                             auth: user,

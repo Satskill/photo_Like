@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_like_app/database/database.dart';
 import 'package:photo_like_app/widgets/anasayfa_widgets/hikayeekrani.dart';
@@ -29,19 +30,22 @@ class _hikayeState extends State<hikaye> {
           print('hikaye kısmı snapshot');
           print(snapshot.data);
           print(snapshot.data[widget.index]['time']);
-          if (DateTime.now()
-                  .difference(
-                      DateTime.parse(snapshot.data[widget.index]['time']))
-                  .inHours <
-              24) {
-            return customlistim(widget.bilgi, snapshot.data);
-          }
-          return customlistim(widget.bilgi, []);
+          List sayilar = snapshot.data;
+          print(sayilar.length);
+          print(widget.bilgi);
+          /*if (DateTime.now()
+                    .difference(DateTime.parse(snapshot.data[i]['time']))
+                    .inHours <
+                24) {
+              return customlistim(widget.bilgi, snapshot.data);
+            }*/
+
+          return customlistim(widget.bilgi, snapshot.data);
         }
         //List gecici = widget.bilgi[0];
-        widget.bilgi.removeWhere((element) {
+        /*widget.bilgi.removeWhere((element) {
           return element != widget.auth;
-        });
+        });*/
         return customlistim(widget.bilgi, []);
       },
     );
@@ -56,6 +60,7 @@ class _hikayeState extends State<hikaye> {
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
+              print('sayısı bura ***************** ${bilgi.length}');
               return futureim(bilgi[index], index, tumbilgiler);
             }, childCount: bilgi.length),
           ),
@@ -71,34 +76,55 @@ class _hikayeState extends State<hikaye> {
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            return GestureDetector(
-              onTap: () async {
-                try {
-                  final tumbilgifinal;
-                  print('burdayım');
-                  if (tumbilgi.isEmpty) {
-                    tumbilgifinal = '';
-                  } else {
-                    tumbilgifinal = tumbilgi[index]['url'];
+            if (tumbilgi.length == index && !tumbilgi.contains(profilepic)) {
+              return Container();
+            } else {
+              return GestureDetector(
+                onTap: () async {
+                  print(tumbilgi);
+                  try {
+                    final tumbilgifinal;
+                    print(index);
+                    print('****************************');
+                    print('burdayım');
+                    print(tumbilgi);
+                    if (tumbilgi[index]['uploader'] !=
+                            FirebaseAuth.instance.currentUser!.email &&
+                        tumbilgi[0].isNotEmpty &&
+                        tumbilgi[0]['url'] != '') {
+                      tumbilgi.insert(0, {
+                        'url': '',
+                        'uploader': FirebaseAuth.instance.currentUser!.email
+                      });
+                    }
+                    if (tumbilgi.isEmpty) {
+                      print('ife girdim');
+                      tumbilgifinal = '';
+                    } else {
+                      print('else girdim');
+                      tumbilgifinal = tumbilgi[index]['url'];
+                      print('sorunyok');
+                    }
+                    await Data().hikayeler(context, index, tumbilgifinal,
+                        tumbilgi[index]['uploader']);
+                  } catch (e) {
+                    print(e);
                   }
-                  await Data().hikayeler(context, index, tumbilgifinal);
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(snapshot.data),
+                },
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(snapshot.data),
+                      ),
                     ),
-                  ),
-                  Center(child: Text('Isim')),
-                ],
-              ),
-            );
+                    Center(child: Text(widget.bilgi[index])),
+                  ],
+                ),
+              );
+            }
           }
           return Center(
             child: CircularProgressIndicator(),

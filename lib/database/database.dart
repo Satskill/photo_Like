@@ -352,6 +352,12 @@ class Data {
               {'$liker': 0},
               SetOptions(merge: true),
             );
+
+            firestore.collection('Notifications').doc(user).update({
+              'Likes': {
+                image: FieldValue.arrayRemove([liker])
+              }
+            });
           } else {
             throw Error();
           }
@@ -365,6 +371,14 @@ class Data {
             {'$liker': 1},
             SetOptions(merge: true),
           );
+
+          firestore.collection('Notifications').doc(user).set({
+            'Likes': {
+              image: [
+                {liker: DateTime.now()}
+              ]
+            }
+          }, SetOptions(merge: true));
         }
       }
     }
@@ -398,6 +412,16 @@ class Data {
           'Yorumcu': commenter,
           'Date': DateTime.now()
         }
+      }
+    }, SetOptions(merge: true));
+
+    firestore.collection('Notifications').doc(user).set({
+      'Comments': {
+        image: [
+          FieldValue.arrayUnion([
+            {'Comment': comment, 'Commenter': commenter, 'Time': DateTime.now()}
+          ])
+        ]
       }
     }, SetOptions(merge: true));
   }
@@ -447,13 +471,19 @@ class Data {
           .collection('Users')
           .doc(follower[0])
           .update({'Following': FieldValue.arrayRemove(user)});
+      firestore
+          .collection('Notifications')
+          .doc(user[0])
+          .update({'Follower': FieldValue.arrayRemove(follower)});
     } else {
-      firestore.collection('Users').doc(user[0]).set({
-        'Followers': [follower[0]]
-      }, SetOptions(merge: true));
-      firestore.collection('Users').doc(follower[0]).set({
-        'Following': [user[0]]
-      }, SetOptions(merge: true));
+      firestore.collection('Users').doc(user[0]).set(
+          {'Followers': FieldValue.arrayUnion(follower)},
+          SetOptions(merge: true));
+      firestore.collection('Users').doc(follower[0]).set(
+          {'Following': FieldValue.arrayUnion(user)}, SetOptions(merge: true));
+      firestore.collection('Notifications').doc(user[0]).set(
+          {'Follower': FieldValue.arrayUnion(follower)},
+          SetOptions(merge: true));
     }
   }
 
@@ -630,8 +660,10 @@ class Data {
     }
   }
 
-  Future hikayeler(BuildContext context, int index, String storybilgiler) {
+  Future hikayeler(
+      BuildContext context, int index, String storybilgiler, String user) {
     print('hikayedeyim');
+    print(storybilgiler);
     return showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -640,7 +672,7 @@ class Data {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             color: Colors.black26,
-            child: index == 0
+            child: index == 0 && user == auth.currentUser!.email
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -654,7 +686,7 @@ class Data {
                                   imageim, auth.currentUser!.email.toString());
                             }
                           },
-                          child: Text('Kişi'),
+                          child: Text(user),
                           style: ElevatedButton.styleFrom(
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
@@ -710,27 +742,16 @@ class Data {
                             Navigator.pushNamed(context, '/profil',
                                 arguments: user);
                           },
-                          child: Text('Kişi'),
+                          child: Text(user),
                           style: ElevatedButton.styleFrom(
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
                               primary: Colors.black.withOpacity(0)),
                         ),
                         Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.broken_image_outlined,
-                                size: 100,
-                              ),
-                              Text('Hikayeniz bulunmuyor'),
-                              ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Çık'))
-                            ],
+                          child: Container(
+                            child:
+                                Image.network(storybilgiler, fit: BoxFit.fill),
                           ),
                         ),
                       ],
@@ -740,6 +761,20 @@ class Data {
         );
       },
     );
+  }
+
+  Future notifications(String user) async {
+    final bilgiler =
+        await firestore.collection('Notifications').doc(user).get();
+
+    List<Map> geridonus = [];
+
+    for (var element in bilgiler.data()!.entries) {
+      geridonus.add({element.key: element.value});
+      print(element);
+    }
+
+    return geridonus;
   }
 
   static const _abc =

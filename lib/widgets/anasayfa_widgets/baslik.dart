@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_like_app/widgets/profilgoruntule/profilgoruntule.dart';
 
@@ -35,8 +36,14 @@ class _baslikState extends State<baslik> {
 
               return ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/profil',
-                      arguments: resim['user']);
+                  if (resim['user'] ==
+                      FirebaseAuth.instance.currentUser!.email) {
+                    Navigator.pushNamed(context, '/profilim',
+                        arguments: resim['user']);
+                  } else {
+                    Navigator.pushNamed(context, '/profil',
+                        arguments: resim['user']);
+                  }
                 },
                 icon: CircleAvatar(
                   backgroundImage: NetworkImage(
