@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: Colors.black),
-          color: Color.fromARGB(255, 41, 52, 98),
+          color: Color.fromARGB(255, 34, 34, 34),
         ),
       ),
     );

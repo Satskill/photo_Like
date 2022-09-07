@@ -46,59 +46,65 @@ class _FivesState extends State<Fives> {
             icon: Icon(Icons.chat),
             label: Text(''),
             style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 41, 52, 98)),
+                primary: Color.fromARGB(255, 34, 34, 34)),
           )
         ],
       ),
       body: Center(
         child: _widgetoptions.elementAt(_index),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              color: Color.fromARGB(255, 245, 247, 178),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home_outlined,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              label: 'Ana Sayfa',
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
             ),
-            label: 'Ana Sayfa',
-            backgroundColor: Color.fromARGB(255, 40, 85, 175),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.image_outlined,
-              color: Color.fromARGB(255, 245, 247, 178),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.image_outlined,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              label: 'Resimler',
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
             ),
-            label: 'Resimler',
-            backgroundColor: Color.fromARGB(255, 31, 70, 144),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_box_outlined,
-              color: Color.fromARGB(255, 245, 247, 178),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_box_outlined,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              label: 'Resim Ekle',
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
             ),
-            label: 'Resim Ekle',
-            backgroundColor: Color.fromARGB(255, 40, 85, 175),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.comment_outlined,
-              color: Color.fromARGB(255, 245, 247, 178),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.comment_outlined,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              label: 'Bildirimler',
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
             ),
-            label: 'Bildirimler',
-            backgroundColor: Color.fromARGB(255, 31, 70, 144),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: Color.fromARGB(255, 245, 247, 178),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+              label: 'Profilim',
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
             ),
-            label: 'Profilim',
-            backgroundColor: Color.fromARGB(255, 40, 85, 175),
-          ),
-        ],
-        currentIndex: _index,
-        selectedItemColor: Color.fromARGB(255, 245, 247, 178),
-        onTap: _onItemTapped,
+          ],
+          currentIndex: _index,
+          selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

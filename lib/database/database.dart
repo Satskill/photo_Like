@@ -375,7 +375,7 @@ class Data {
           firestore.collection('Notifications').doc(user).set({
             'Likes': {
               image: [
-                {liker: DateTime.now()}
+                {usernamedata: DateTime.now()}
               ]
             }
           }, SetOptions(merge: true));
@@ -419,7 +419,11 @@ class Data {
       'Comments': {
         image: [
           FieldValue.arrayUnion([
-            {'Comment': comment, 'Commenter': commenter, 'Time': DateTime.now()}
+            {
+              'Comment': comment,
+              'Commenter': usernamedata,
+              'Time': DateTime.now()
+            }
           ])
         ]
       }
@@ -471,19 +475,18 @@ class Data {
           .collection('Users')
           .doc(follower[0])
           .update({'Following': FieldValue.arrayRemove(user)});
-      firestore
-          .collection('Notifications')
-          .doc(user[0])
-          .update({'Follower': FieldValue.arrayRemove(follower)});
+      firestore.collection('Notifications').doc(user[0]).update({
+        'Follower': FieldValue.arrayRemove([usernamedata])
+      });
     } else {
       firestore.collection('Users').doc(user[0]).set(
           {'Followers': FieldValue.arrayUnion(follower)},
           SetOptions(merge: true));
       firestore.collection('Users').doc(follower[0]).set(
           {'Following': FieldValue.arrayUnion(user)}, SetOptions(merge: true));
-      firestore.collection('Notifications').doc(user[0]).set(
-          {'Follower': FieldValue.arrayUnion(follower)},
-          SetOptions(merge: true));
+      firestore.collection('Notifications').doc(user[0]).set({
+        'Follower': FieldValue.arrayUnion([usernamedata])
+      }, SetOptions(merge: true));
     }
   }
 
