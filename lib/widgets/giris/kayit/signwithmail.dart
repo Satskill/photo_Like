@@ -25,7 +25,7 @@ class _SignsMailState extends State<SignsMail> {
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
+              padding: const EdgeInsets.fromLTRB(120, 0, 120, 0),
               child: AnimatedToggleSwitch<int>.dual(
                 current: SignsMail.form,
                 first: 0,
@@ -68,14 +68,22 @@ class _SignsMailState extends State<SignsMail> {
             children: [
               textim(_mailcont, 'E-Posta'),
               textim(_passcont, 'Şifre'),
-              ElevatedButton(
-                  onPressed: () {
-                    Data()
-                        .SignsWithMail(_mailcont.text, _passcont.text, context);
-                  },
-                  child: Center(
-                    child: Text('Giriş Yap'),
-                  ))
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Data().SignsWithMail(
+                          _mailcont.text, _passcont.text, context);
+                    },
+                    child: Center(
+                      child: Text('Giriş Yap'),
+                    ),
+                    style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -92,15 +100,25 @@ class _SignsMailState extends State<SignsMail> {
               textim(_isimcont, 'İsim'),
               textim(_soyisimcont, 'Soyisim'),
               textim(_username, 'Username'),
-              ElevatedButton(
-                  onPressed: () {
-                    Data().SignsWithMail(
-                        _mailcont.text, _passcont.text, context,
-                        isim: _isimcont.text, soyisim: _soyisimcont.text, username: _username.text);
-                  },
-                  child: Center(
-                    child: Text('Kayıt Ol'),
-                  ))
+              Center(
+                child: SizedBox(
+                  width: 200,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Data().SignsWithMail(
+                          _mailcont.text, _passcont.text, context,
+                          isim: _isimcont.text,
+                          soyisim: _soyisimcont.text,
+                          username: _username.text);
+                    },
+                    child: Center(
+                      child: Text('Kayıt Ol'),
+                    ),
+                    style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -109,16 +127,34 @@ class _SignsMailState extends State<SignsMail> {
   }
 
   Widget textim(TextEditingController controller, String? label) {
-    return SizedBox(
-      height: 50,
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderSide: BorderSide(width: 2, style: BorderStyle.solid),
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-          ),
-          labelText: label,
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: SizedBox(
+        height: 50,
+        child: TextField(
+          controller: controller,
+          obscureText: true,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(width: 2, style: BorderStyle.solid),
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              labelText: label,
+              suffixIcon: label == 'Şifre'
+                  ? Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(0, 255, 255, 255),
+                            elevation: 0),
+                        child: Icon(
+                          Icons.remove_red_eye,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {},
+                      ),
+                    )
+                  : null),
         ),
       ),
     );

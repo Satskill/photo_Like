@@ -128,7 +128,7 @@ class _sohbetgoruntuleState extends State<sohbetgoruntule> {
                   padding: EdgeInsets.all(2),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, elevation: 0),
+                        primary: Colors.white, elevation: 0),
                     child: Text(
                       'Gönder',
                       style: TextStyle(color: Colors.black),
