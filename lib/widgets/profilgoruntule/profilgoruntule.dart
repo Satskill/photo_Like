@@ -39,7 +39,7 @@ class _profilState extends State<profil> {
             icon: Icon(Icons.add_comment_rounded),
             label: Text(''),
             style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 41, 52, 98)),
+                primary: Color.fromARGB(255, 34, 34, 34)),
           )
         ],
       ),

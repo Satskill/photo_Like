@@ -9,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_like_app/widgets/besli_sayfa/ekle.dart';
 import 'package:photo_like_app/widgets/besli_sayfa/resimekle.dart';
@@ -58,21 +59,24 @@ class Data {
         try {
           var _newuser = await auth.createUserWithEmailAndPassword(
               email: _mail, password: _password);
-          Navigator.pushReplacementNamed(_context, '/fives');
+
           //Navigator.pushNamed(_context, '/fives');
-          firestore.collection('Users').doc('$_mail').set({
+          await firestore.collection('Users').doc('$_mail').set({
             'Followers': [],
             'Following': [],
             'Info': {'Isim': isim, 'Soyisim': soyisim, 'Username': username}
           });
-          firestore.collection('Users').doc('Usernames').set({
+          await firestore.collection('Users').doc('Usernames').set({
             '$username': {
               'Mail': _mail,
               'ProfilePic':
                   'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81'
             }
           }, SetOptions(merge: true));
+          // await storage.ref('Users/ProfilePics/$_mail').putString(
+          //    'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81');
           usernamedata = username;
+          Navigator.pushReplacementNamed(_context, '/fives');
         } catch (e) {
           AlertDialog _alert = AlertDialog(
             title: Text('Hata!'),
@@ -606,7 +610,20 @@ class Data {
   Future sohbetekle(String chatuser, String mesaj) async {
     final sohbetler = await firestore.collection('Chats').doc(chatuser).get();
 
-    int yeniohbetsayisi = sohbetler.data()!.length + 1;
+    int yeniohbetsayisi;
+
+    if (sohbetler.data() == null) {
+      yeniohbetsayisi = 1;
+      await firestore.collection('Chats').doc(chatuser).set({
+        '$yeniohbetsayisi': {
+          'Sender': auth.currentUser!.email,
+          'Sohbet': mesaj,
+          'Time': DateTime.now()
+        }
+      }, SetOptions(merge: true));
+    } else {
+      yeniohbetsayisi = sohbetler.data()!.length + 1;
+    }
 
     firestore.collection('Chats').doc(chatuser).set({
       '$yeniohbetsayisi': {
@@ -652,21 +669,26 @@ class Data {
 
   Future hikayeekle(File filepath, String kisi) async {
     File file = File(filepath.path);
-    String name = getRndString(32);
 
     try {
       var metam = {'uploader': '$kisi', 'date': '${DateTime.now()}'};
-      await storage.ref('Story/$kisi/$name').putFile(
+      await storage.ref('Story/$kisi/$kisi').putFile(
           file, firebase_storage.SettableMetadata(customMetadata: metam));
     } catch (e) {
       print(e);
     }
   }
 
-  Future hikayeler(
-      BuildContext context, int index, String storybilgiler, String user) {
+  Future hikayeler(BuildContext context, int index, String storybilgiler,
+      String user, int tarih, String username) async {
+    final bilgi = await userallinfo(user);
+    print(bilgi);
     print('hikayedeyim');
     print(storybilgiler);
+    print(tarih);
+    if (tarih > 1) {
+      print('evet');
+    }
     return showGeneralDialog(
       context: context,
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -680,7 +702,7 @@ class Data {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ElevatedButton(
+                        /*ElevatedButton(
                           onPressed: () async {
                             dynamic image = await showImage(context);
                             if (image != null) {
@@ -689,13 +711,13 @@ class Data {
                                   imageim, auth.currentUser!.email.toString());
                             }
                           },
-                          child: Text(user),
+                          child: Text(username),
                           style: ElevatedButton.styleFrom(
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
                               primary: Colors.black.withOpacity(0)),
-                        ),
-                        storybilgiler.isEmpty
+                        ),*/
+                        storybilgiler.isEmpty || tarih >= 1
                             ? Expanded(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -714,9 +736,10 @@ class Data {
                                             try {
                                               image = FileImage(
                                                   File(fileimage['file'].path));
-                                              await Data().uploadImage(
+                                              await hikayeekle(
                                                   File(fileimage['file'].path),
-                                                  'Story');
+                                                  auth.currentUser!.email
+                                                      .toString());
                                             } catch (e) {
                                               print(e);
                                             }
@@ -740,7 +763,7 @@ class Data {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ElevatedButton(
+                        /* ElevatedButton(
                           onPressed: () async {
                             Navigator.pushNamed(context, '/profil',
                                 arguments: user);
@@ -750,7 +773,7 @@ class Data {
                               fixedSize:
                                   Size(MediaQuery.of(context).size.width, 60),
                               primary: Colors.black.withOpacity(0)),
-                        ),
+                        ),*/
                         Expanded(
                           child: Container(
                             child:

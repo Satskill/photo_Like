@@ -38,8 +38,8 @@ class _baslikState extends State<baslik> {
                 onPressed: () {
                   if (resim['user'] ==
                       FirebaseAuth.instance.currentUser!.email) {
-                    Navigator.pushNamed(context, '/profilim',
-                        arguments: resim['user']);
+                    /*Navigator.pushNamed(context, '/profilim',
+                        arguments: resim['user']);*/
                   } else {
                     Navigator.pushNamed(context, '/profil',
                         arguments: resim['user']);

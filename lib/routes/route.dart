@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:photo_like_app/widgets/anasayfa_widgets/hikayeekrani.dart';
 import 'package:photo_like_app/widgets/besli_sayfa/profilim.dart';
 import 'package:photo_like_app/widgets/fivepages.dart';
+import 'package:photo_like_app/widgets/giris/kayit/signwithmail.dart';
 import 'package:photo_like_app/widgets/listeleme/kisiler.dart';
 import 'package:photo_like_app/widgets/profilgoruntule/profilgoruntule.dart';
 import 'package:photo_like_app/widgets/listeleme/yorumlar.dart';
@@ -69,6 +70,8 @@ class Routes {
         return _routes(hikayeekrani(index: index), settings);
       case '/followsohbet':
         return _routes(followsohbet(), settings);
+      case '/signs':
+        return _routes(SignsMail(), settings);
     }
   }
 }

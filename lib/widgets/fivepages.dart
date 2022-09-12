@@ -41,9 +41,12 @@ class _FivesState extends State<Fives> {
         actions: [
           ElevatedButton.icon(
             onPressed: () {
+              if (_index == 4) {
+                Navigator.pushReplacementNamed(context, '/signs');
+              }
               Navigator.pushNamed(context, '/sohbetler');
             },
-            icon: Icon(Icons.chat),
+            icon: _index == 4 ? Icon(Icons.logout) : Icon(Icons.chat),
             label: Text(''),
             style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 34, 34, 34)),

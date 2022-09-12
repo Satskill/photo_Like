@@ -60,10 +60,10 @@ class _BegeniYorumState extends State<BegeniYorum> {
                     .last as Timestamp;
               }
               return ListTile(
-                leading: index == 0
-                    ? Text('Takip Eden')
-                    : Text(
-                        '${FirebaseAuth.instance.currentUser!.email}/${(listem[index] as Map).keys.first}'),
+                /* leading: index == 0
+                    ? null
+                    : Text('leading' +
+                        '${FirebaseAuth.instance.currentUser!.email}/${(listem[index] as Map).keys.first}'),*/
                 /*FutureBuilder(
                         future: Data().ProfilePicShow(
                             'Users/Pictures/${FirebaseAuth.instance.currentUser!.email}/${(listem[index] as Map).keys.first}'),
@@ -77,15 +77,13 @@ class _BegeniYorumState extends State<BegeniYorum> {
                         },
                       ),*/
                 title: index == 0
-                    ? Text(listem[0].length.toString())
-                    : Text((((listem[index] as Map).values.first as List)[0]
-                                    as Map)
+                    ? Text(listem[0].length.toString() + ' Takipçi')
+                    : Text((((listem[index] as Map).values.first as List)[0] as Map)
                                 .keys
                                 .first
                                 .toString() ==
                             'Comment'
-                        ? ((((listem[index] as Map).values.first as List)[0]
-                                        as Map)
+                        ? ((((listem[index] as Map).values.first as List)[0] as Map)
                                     .entries)
                                 .where((element) => element.key == 'Commenter')
                                 .first
@@ -97,15 +95,19 @@ class _BegeniYorumState extends State<BegeniYorum> {
                                 .values
                                 .first
                                 .toString()
-                        : (((listem[index] as Map).values.first as List)[0]
-                                    as Map)
+                        : (((listem[index] as Map).values.first as List)[0] as Map)
                                 .keys
                                 .first
                                 .toString() +
-                            ' ' +
-                            'Beğendi'),
+                            ' ve ' +
+                            (((listem[index] as Map).values.first as List)[0]
+                                    as Map)
+                                .keys
+                                .length
+                                .toString() +
+                            ' kişi beğendi'),
                 subtitle: index == 0
-                    ? Text('')
+                    ? null
                     : Text(
                         style: TextStyle(
                             fontSize: 12,
