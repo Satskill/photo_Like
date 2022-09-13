@@ -36,8 +36,11 @@ class _ekleState extends State<ekle> {
           if (widget.fileimage != null) {
             try {
               widget.image = FileImage(File(widget.fileimage['file'].path));
+              print('widgetimage oldu');
               Resimekle.fileimage = widget.image;
-              Resimekle.file = widget.fileimage['file'].path;
+              print('resimeklefile oldu');
+              Resimekle.file = File(widget.fileimage['file'].path);
+              print('tamamladı');
             } catch (e) {
               print(e);
             }

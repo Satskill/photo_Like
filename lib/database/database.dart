@@ -57,8 +57,12 @@ class Data {
         Navigator.pushReplacementNamed(_context, '/fives');
       } catch (e) {
         try {
-          var _newuser = await auth.createUserWithEmailAndPassword(
-              email: _mail, password: _password);
+          if (username != null && isim != null && soyisim != null) {
+            var _newuser = await auth.createUserWithEmailAndPassword(
+                email: _mail, password: _password);
+          } else {
+            throw Error();
+          }
 
           //Navigator.pushNamed(_context, '/fives');
           await firestore.collection('Users').doc('$_mail').set({
@@ -78,23 +82,13 @@ class Data {
           usernamedata = username;
           Navigator.pushReplacementNamed(_context, '/fives');
         } catch (e) {
-          AlertDialog _alert = AlertDialog(
-            title: Text('Hata!'),
-            content: Text(e.toString()),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(_context).pop();
-                  },
-                  child: Text('OK'))
-            ],
-          );
+          ScaffoldMessenger.of(_context).showSnackBar(
+              SnackBar(content: Text('Hatalı email yada parola')));
         }
       }
     } else {
-      AlertDialog(
-        title: Text('Username mevcut'),
-      );
+      ScaffoldMessenger.of(_context)
+          .showSnackBar(SnackBar(content: Text('Username mevcut')));
     }
   }
 

@@ -62,6 +62,11 @@ class _sohbetlisteState extends State<sohbetliste> {
                           final bilgiler = snapshot.data[index];
                           print('sohbetler');
                           print(bilgiler);
+                          print(bilgiler['Image']);
+                          if (bilgiler['Image'] == null) {
+                            bilgiler['Image'] =
+                                'https://firebasestorage.googleapis.com/v0/b/photo-like-92bf0.appspot.com/o/BlankUser%2Fblank-profile-picture.png?alt=media&token=43e4eadf-7f05-4303-a010-d4d2d60a1c81';
+                          }
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(bilgiler['Image']),
